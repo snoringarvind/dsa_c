@@ -601,26 +601,149 @@ int FindingMultipleMissingElementsInUnsortedArray(struct Array arr)
   }
 }
 
+// sorted array, finding duplicated
+int FindingDuplicatesInSortedArray(struct Array arr)
+{
+  // print duplicate only once;
+  int lastDuplicate = 0;
+
+  for (int i = 0; i < arr.length - 1; i++)
+  {
+    if (arr.A[i] == arr.A[i + 1] && arr.A[i] != lastDuplicate)
+    {
+      printf("Duplicate elements are %d\n", arr.A[i]);
+      lastDuplicate = arr.A[i];
+    }
+  }
+}
+
+// sorted array, counting duplicates
+int CountingDuplicatesInSortedArray_1(struct Array arr)
+{
+  int count = 0;
+  for (int i = 0; i < arr.length; i++)
+  {
+    if (arr.A[i] == arr.A[i + 1] && i != arr.length - 1)
+      count++;
+    else if (count >= 1)
+    {
+      printf("%d is appearing %d times\n", arr.A[i], count + 1);
+      count = 0;
+    }
+    else
+      count = 0;
+  }
+}
+
+// sorted array, counting duplicates
+int CountingDuplicatesInSortedArray_2(struct Array arr)
+{
+  int j = 0;
+  for (int i = 0; i < arr.length - 1; i++)
+  {
+    if (arr.A[i] == arr.A[i + 1])
+    {
+      j = i + 1;
+      while (arr.A[i] == arr.A[j])
+        j++;
+      printf("%d is appearing %d times\n", arr.A[i], j - i);
+      i = j;
+    }
+  }
+}
+
+// sorted array, finding duplicates, using hash-table
+int FindingDuplicatesInSortedArray_3(struct Array arr)
+{
+  int l = 1;
+  int h = Max(arr);
+  int hashArray[h + 1]; // create an array from 0-n+1
+
+  for (int i = 0; i <= h; i++)
+  {
+    hashArray[i] = 0;
+  }
+
+  for (int i = 0; i < arr.length; i++)
+  {
+    hashArray[arr.A[i]]++;
+  }
+
+  for (int i = 0; i <= h; i++)
+  {
+    if (hashArray[i] > 1)
+    {
+      printf("%d is appearing %d times\n", i, hashArray[i]);
+    }
+  }
+}
+
+// unsorted array, using nested loops
+void FindingDuplicatesInUnSortedArray_2(struct Array arr)
+{
+  int count = 1;
+  for (int i = 0; i < arr.length - 1; i++)
+  {
+    if (arr.A[i] != -1)
+    {
+      for (int j = i + 1; j < arr.length; j++)
+      {
+        if (arr.A[i] == arr.A[j])
+        {
+          count++;
+          arr.A[j] = -1;
+        }
+      }
+      if (count > 1)
+        printf("%d is appearing %d times\n", arr.A[i], count);
+      count = 1;
+    }
+  }
+}
+
+// #126
+int FindingDuplicatesInUnsortedArray_2(struct Array arr)
+{
+  int h = Max(arr);
+  int hashArray[h + 1];
+
+  for (int i = 0; i <= h; i++)
+  {
+    hashArray[i] = 0;
+  }
+
+  for (int i = 0; i < arr.length; i++)
+  {
+    hashArray[arr.A[i]]++;
+  }
+
+  for (int i = 0; i <= h; i++)
+  {
+    if (hashArray[i] > 1)
+      printf("%d is appearing %d times", i, hashArray[i]);
+  }
+}
+
 int main()
 {
   struct Array arr;
   arr.size = 20;
   arr.A = (int *)malloc(arr.size * sizeof(int));
 
-  arr.A[0] = 3;
-  arr.A[1] = 7;
-  arr.A[2] = 4;
-  arr.A[3] = 9;
-  arr.A[4] = 12;
-  arr.A[5] = 6;
-  arr.A[6] = 1;
-  arr.A[7] = 11;
-  arr.A[8] = 2;
-  arr.A[9] = 10;
+  arr.A[0] = 6;
+  arr.A[1] = 6;
+  arr.A[2] = 20;
+  arr.A[3] = 8;
+  arr.A[4] = 10;
+  arr.A[5] = 15;
+  arr.A[6] = 15;
+  arr.A[7] = 10;
+  arr.A[8] = 20;
+  arr.A[9] = 8;
 
   arr.length = 10;
 
-  FindingMultipleMissingElementsInUnsortedArray(arr);
+  FindingDuplicatesInUnSortedArray_2(arr);
   free(arr.A);
 
   return 0;
