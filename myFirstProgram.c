@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+struct Array_1
+{
+  int A[30];
+  int length;
+};
+
 struct Array
 {
   int *A;
@@ -701,8 +707,7 @@ void FindingDuplicatesInUnSortedArray_2(struct Array arr)
   }
 }
 
-// #126
-int FindingDuplicatesInUnsortedArray_2(struct Array arr)
+void FindingDuplicatesInUnsortedArray_2(struct Array arr)
 {
   int h = Max(arr);
   int hashArray[h + 1];
@@ -724,27 +729,525 @@ int FindingDuplicatesInUnsortedArray_2(struct Array arr)
   }
 }
 
+// using nested loops, unsorted array
+void FindingPairOfElementsWithSumK_1(struct Array arr, int k)
+{
+  for (int i = 0; i < arr.length - 1; i++)
+  {
+    for (int j = i + 1; j < arr.length; j++)
+    {
+      if (arr.A[i] + arr.A[j] == k)
+      {
+        printf("pair of elements are %d, %d\n", arr.A[i], arr.A[j]);
+        break;
+      }
+    }
+  }
+}
+
+// using hash table, unsorted array
+void FindingPairOfElementsWithSumK_2(struct Array arr, int k)
+{
+  int h = Max(arr);
+  int hashArray[h + 1];
+
+  for (int i = 0; i <= h; i++)
+  {
+    hashArray[i] = 0;
+  }
+
+  for (int i = 0; i < arr.length; i++)
+  {
+    if (arr.A[i] <= k && hashArray[k - arr.A[i]] != 0)
+      printf("pair of elements are %d, %d\n", arr.A[i], k - arr.A[i]);
+    hashArray[arr.A[i]]++;
+  }
+}
+
+int Max_1(struct Array_1 arr)
+{
+  int max = arr.A[0];
+  for (int i = 0; i < arr.length; i++)
+  {
+    if (arr.A[i] > max)
+    {
+      max = arr.A[i];
+    }
+  }
+  return max;
+}
+
+int Min_1(struct Array_1 arr)
+{
+  int min = arr.A[0];
+  for (int i = 0; i < arr.length; i++)
+  {
+    if (arr.A[i] < min)
+    {
+      min = arr.A[i];
+    }
+  }
+
+  return min;
+}
+
+// using hash table, unsorted array, for negative numbers
+void FindingPairOfElementsWithSumK_3(struct Array arr, int k)
+{
+  int l = Min(arr);
+
+  if (l < 0)
+  {
+    for (int i = 0; i < arr.length; i++)
+    {
+      arr.A[i] = arr.A[i] + (l * -1);
+    }
+  }
+
+  l = l * -1;
+
+  int h = Max(arr);
+  int hashArray[h + 1];
+
+  for (int i = 0; i <= h; i++)
+  {
+    hashArray[i] = 0;
+  }
+
+  for (int i = 0; i < arr.length; i++)
+  {
+    int a = arr.A[i] - l;
+    int b = k - a;
+    int hash_index = b + l;
+
+    if (hash_index <= h)
+    {
+      if (hashArray[hash_index] != 0)
+        printf("pair of elements are %d, %d\n", a, b);
+    }
+    hashArray[arr.A[i]]++;
+  }
+};
+
+// sorted array
+void FindingPairOfElementsWithSumKInSortedArray(struct Array arr, int k)
+{
+  int i = 0;
+  int j = arr.length;
+  while (i < j)
+  {
+    if (arr.A[i] + arr.A[j] > k)
+    {
+      j--;
+    }
+    else if (arr.A[i] + arr.A[j] < k)
+    {
+      i++;
+    }
+    else
+    {
+      printf("%d, %d\n", arr.A[i], arr.A[j]);
+      i++;
+    }
+  }
+}
+
+void FindingMinMaxInSingleScan(struct Array arr, int *min, int *max)
+{
+  int temp_min = arr.A[0];
+  int temp_max = 0;
+  for (int i = 0; i < arr.length; i++)
+  {
+    if (arr.A[i] < temp_min)
+    {
+      temp_min = arr.A[i];
+    }
+    else if (arr.A[i] > temp_max)
+    {
+      temp_max = arr.A[i];
+    }
+  }
+  *min = temp_min;
+  *max = temp_max;
+}
+
+int FindLengthOfString(char str[])
+{
+  int count = 0;
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    count++;
+  }
+
+  return count;
+}
+
+void ToLowerCase(char str[])
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (str[i] >= 65 && str[i] <= 90)
+    {
+      str[i] = str[i] + 32;
+    }
+  }
+}
+
+void ToUpperCase(char str[])
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (str[i] >= 97 && str[i] <= 122)
+    {
+      str[i] = str[i] - 32;
+    }
+  }
+}
+
+void ToggleCase(char str[])
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (str[i] >= 97 && str[i] <= 122)
+    {
+      str[i] = str[i] - 32;
+    }
+    else if (str[i] >= 65 && str[i] <= 90)
+    {
+      str[i] = str[i] + 32;
+    }
+  }
+}
+
+int CountVoweslAndConsonants(char str[], int *v, int *c)
+{
+  int c_count = 0;
+  int v_count = 0;
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (str[i] == 'a' || str[i] == 'e' || str[i] == 'i' || str[i] == 'o' || str[i] == 'u' ||
+        str[i] == 'A' || str[i] == 'E' || str[i] == 'I' || str[i] == 'O' || str[i] == 'U')
+      v_count += 1;
+    else
+      c_count += 1;
+  }
+  *v = v_count;
+  *c = c_count;
+}
+
+int CountWords(char str[])
+{
+  int word = 1;
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (str[i] == ' ' && str[i - 1] != ' ')
+    {
+      word++;
+    }
+  }
+
+  return word;
+}
+
+void ReverseAString_1(char str[], char rstr[])
+{
+  int i;
+  for (i = 0; str[i] != '\0'; i++)
+  {
+  }
+
+  i = i - 1;
+
+  for (int j = 0; i >= 0; j++, i--)
+  {
+    rstr[j] = str[i];
+  }
+}
+
+void ReverseAString_2(char str[])
+{
+  int i = 0;
+  for (; str[i] != '\0'; i++)
+  {
+  }
+  i -= 1;
+
+  for (int j = 0; i > j; j++, i--)
+  {
+    char temp = str[j];
+    str[j] = str[i];
+    str[i] = temp;
+  }
+}
+
+int ComparingStrings(char str1[], char str2[])
+{
+  for (int i = 0; str1[i] != '\0'; i++)
+  {
+    if (str1[i] != str2[i])
+    {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+void CheckPalindrome_1(char str[])
+{
+
+  int i = 0;
+  for (; str[i] != '\0'; i++)
+  {
+  }
+  i -= 1;
+
+  char str2[i];
+
+  ReverseAString_1(str, str2);
+
+  if (ComparingStrings(str, str2) == 0)
+    printf("not a palindrome\n");
+  else
+    printf("string is a palindrome\n");
+}
+
+void CheckPalindrome_2(char str[])
+{
+  int i = 0;
+  for (; str[i] != '\0'; i++)
+  {
+  }
+  i -= 1;
+
+  for (int j = 0; i > j; j++, i--)
+  {
+    if (str[j] != str[i])
+    {
+      printf("not a palindrome");
+      return;
+    }
+  }
+
+  printf("it is a palindrome");
+}
+
+// using nested loops
+void FindingDuplicatesInString_1(char str[])
+{
+  int l = 0;
+  int count = 0;
+  for (; str[l] != '\0'; l++)
+  {
+  }
+
+  for (int i = 0; i < l - 1; i++)
+  {
+    count = 1;
+    if (str[i] != -1)
+    {
+      for (int j = i + 1; j < l; j++)
+      {
+        if (str[j] != -1 && str[i] == str[j])
+        {
+          count++;
+          str[j] = -1;
+        }
+      }
+      if (count > 1)
+      {
+        printf("%c is appearing %d times\n", str[i], count);
+      }
+    }
+  }
+}
+
+// using hashtablem, also converts to lowercase
+void FindingDuplicatesInString_2(char str[])
+{
+  ToLowerCase(str);
+  int l;
+  for (; str[l] != '\0'; l++)
+  {
+  }
+
+  int hashArray[26] = {0};
+
+  for (int i = 0; i < l; i++)
+  {
+    hashArray[str[i] - 97]++;
+  }
+
+  for (int i = 0; i < 26; i++)
+  {
+    if (hashArray[i] > 1)
+    {
+      printf("%c is appearing %d times\n", i + 97, hashArray[i]);
+    }
+  }
+}
+
+// using bitwise operations
+void FindDuplicatesInString_3(char str[])
+{
+  int h, x = 0;
+
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    x = 1;
+    x = x << (str[i] - 97);
+    if ((x & h) > 0)
+      printf("duplicate found %c\n", str[i]);
+
+    h = x | h;
+  }
+}
+
+// using nested loops
+void CheckAnagram_1(char str1[], char str2[])
+{
+  int found = 0;
+  int str1_length = 0;
+  int str2_length = 0;
+  for (; str1[str1_length] != '\0'; str1_length++)
+  {
+  }
+
+  for (; str2[str2_length]; str2_length++)
+  {
+  }
+
+  if (str1_length != str2_length)
+  {
+    printf("not anagram\n");
+  }
+  else
+  {
+    for (int i = 0; str1[i] != '\0'; i++)
+    {
+      found = 0;
+      for (int j = 0; str2[j] != '\0'; j++)
+      {
+        if (str2[j] != -1 && str1[i] == str2[j])
+        {
+          str2[j] = -1;
+          found = 1;
+          break;
+        }
+      }
+      if (found == 0)
+      {
+        printf("not anagram\n");
+        break;
+      }
+    }
+  }
+
+  if (found == 1)
+  {
+    printf("it is a anagram\n");
+  }
+}
+
+// using hashtable, for lowercase letters,else you can convert all letters to lower and then check.
+void CheckAnagram_2(char A[], char B[])
+{
+  int hashArray[26] = {0};
+  int A_length = 0;
+  int B_length = 0;
+
+  for (; A[A_length] != 0; A_length++)
+  {
+  }
+
+  for (; B[B_length] != 0; B_length++)
+  {
+  }
+
+  if (A_length != B_length)
+  {
+    printf("not anagram");
+    return;
+  }
+
+  for (int i = 0; i < A_length; i++)
+  {
+    hashArray[A[i] - 97] += 1;
+  }
+
+  for (int i = 0; i < B_length; i++)
+  {
+    hashArray[B[i] - 97] -= 1;
+    if (hashArray[B[i] - 97] < 0)
+    {
+      printf("not anagram");
+      return;
+    }
+  }
+
+  printf("anagram");
+}
+
+// using bitwise operations, cannot use duplicates
+void CheckAnagram_3(char A[], char B[])
+{
+  int H, H_temp, X_temp = 1;
+
+  int A_length = 0;
+  int B_length = 0;
+
+  for (; A[A_length] != 0; A_length++)
+  {
+  }
+
+  for (; B[B_length] != 0; B_length++)
+  {
+  }
+
+  if (A_length != B_length)
+  {
+    printf("not anagram");
+    return;
+  }
+
+  for (int i = 0; i < A_length; i++)
+  {
+    H_temp = 1;
+    H_temp = H_temp << (A[i] - 97);
+    H = H | H_temp;
+  }
+
+  for (int j = 0; j < B_length; j++)
+  {
+    X_temp = 1;
+    X_temp = X_temp << (B[j] - 97);
+    if ((X_temp & H) == 0)
+    {
+      printf("not anagram");
+      return;
+    }
+  }
+
+  printf("anagram");
+}
+
 int main()
 {
   struct Array arr;
   arr.size = 20;
   arr.A = (int *)malloc(arr.size * sizeof(int));
 
-  arr.A[0] = 6;
-  arr.A[1] = 6;
-  arr.A[2] = 20;
-  arr.A[3] = 8;
-  arr.A[4] = 10;
-  arr.A[5] = 15;
-  arr.A[6] = 15;
-  arr.A[7] = 10;
-  arr.A[8] = 20;
-  arr.A[9] = 8;
+  arr.A[0] = 2;
+  arr.A[1] = 3;
+  arr.A[2] = 4;
+  arr.A[3] = 6;
+  arr.A[4] = 8;
+  arr.A[5] = 10;
+  arr.A[6] = 12;
+  arr.length = 7;
 
-  arr.length = 10;
+  char name[] = "bad";
+  char name1[] = "abe";
 
-  FindingDuplicatesInUnSortedArray_2(arr);
-  free(arr.A);
-
+  CheckAnagram_3(name, name1);
   return 0;
 }
