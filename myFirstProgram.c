@@ -72,6 +72,13 @@ void Swap(int *x, int *y)
   *y = temp;
 }
 
+void SwapChar(char *x, char *y)
+{
+  char temp = *x;
+  *x = *y;
+  *y = temp;
+}
+
 int LinearSearch(struct Array *arr, int element)
 {
   for (int i = 0; i < arr->length; i++)
@@ -1230,6 +1237,64 @@ void CheckAnagram_3(char A[], char B[])
   printf("anagram");
 }
 
+int TryLoopRec(int n)
+{
+  int x = 1;
+  // int k = 1;
+  if (n == 1)
+  {
+    return x;
+  }
+
+  for (int k = 1; k < n; k++)
+  {
+    x = x + TryLoopRec(n - k) + n;
+  }
+
+  return x;
+}
+
+void Perm_1(char s[], int k)
+{
+  static int A[10] = {0};
+  static char Res[10];
+
+  int i;
+  if (s[k] == '\0')
+  {
+    Res[k] = '\0';
+    printf("%s\n", Res);
+  }
+  else
+  {
+    for (i = 0; s[i] != '\0'; i++)
+    {
+      if (A[i] == 0)
+      {
+        Res[k] = s[i];
+        A[i] = 1;
+        Perm_1(s, k + 1);
+      }
+    }
+  }
+}
+
+void Perm_2(char s[], int l, int h)
+{
+  int i;
+  if (l == h)
+    printf("%s\n", s);
+  else
+  {
+    for (i = l; i <= h; i++)
+    {
+      SwapChar(&s[l], &s[i]);
+      Perm_2(s, l + 1, h);
+      SwapChar(&s[l], &s[i]);
+    }
+  }
+};
+
 int main()
 {
   struct Array arr;
@@ -1245,9 +1310,7 @@ int main()
   arr.A[6] = 12;
   arr.length = 7;
 
-  char name[] = "bad";
-  char name1[] = "abe";
-
-  CheckAnagram_3(name, name1);
-  return 0;
+  char s[] = {'A', 'B', 'C', '\0'};
+  Perm_2(s, 0, 2);
+  printf("last string ==%s", s);
 }
