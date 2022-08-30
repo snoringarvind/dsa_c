@@ -51,15 +51,6 @@ void Display(struct Sparse *S)
         }
         printf("\n");
     }
-
-    printf("-x-x-x-x\n");
-
-    for (int i = 0; i < S->numOfElements; i++)
-    {
-        printf("s==>%d %d %d\n", S->e[i].i, S->e[i].j, S->e[i].x);
-    };
-
-    printf("-x-x-x-x\n");
 }
 
 // order of matrices should be same to add.
@@ -83,49 +74,18 @@ void AddSparse(struct Sparse *A, struct Sparse *B, struct Sparse *C)
     {
         if (A->e[i].i == B->e[j].i && A->e[i].j == B->e[j].j)
         {
-            C->e[k].i = A->e[i].i;
-            C->e[k].j = A->e[i].j;
-            C->e[k].x = A->e[i].x + B->e[j].x;
-            i++;
-            j++;
+            C->e[k] = A->e[i++];
+            C->e[k++].x += B->e[j++].x;
         }
         else if (A->e[i].i == B->e[j].i && A->e[i].j > B->e[j].j)
-        {
-            C->e[k].i = B->e[j].i;
-            C->e[k].j = B->e[j].j;
-            C->e[k].x = B->e[j].x;
-            j++;
-        }
+            C->e[k++] = B->e[j++];
         else if (A->e[i].i == B->e[j].i && A->e[i].j < B->e[j].j)
-        {
-            C->e[k].i = A->e[i].i;
-            C->e[k].j = A->e[i].j;
-            C->e[k].x = A->e[i].x;
-            i++;
-        }
+            C->e[k++] = A->e[i++];
         else if (A->e[i].i > B->e[j].i)
-        {
-
-            C->e[k].i = B->e[j].i;
-            C->e[k].j = B->e[j].j;
-            C->e[k].x = B->e[j].x;
-            j++;
-        }
+            C->e[k++] = B->e[j++];
         else if (A->e[i].i < B->e[j].i)
-        {
-            C->e[k].i = A->e[i].i;
-            C->e[k].j = A->e[i].j;
-            C->e[k].x = A->e[i].x;
-            i++;
-        }
-        k++;
+            C->e[k++] = A->e[i++];
     }
-    printf("k==%d %d %d\n", k, A->numOfElements, B->numOfElements);
-    for (i = 0; i < k; i++)
-    {
-        printf("%d %d %d\n", C->e[i].i, C->e[i].j, C->e[i].x);
-    }
-    printf("x-x-x-x\n");
     C->numOfElements = k;
 }
 
