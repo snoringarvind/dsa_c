@@ -29,7 +29,7 @@ void Create(struct Sparse *S)
     printf("Enter i,j,x values\n");
     for (int i = 0; i < S->numOfElements; i++)
     {
-        scanf("%d %d %d", &S->e[i].i, &S->e[i].j, &S->e[i].x);
+        scanf("%d%d%d", &S->e[i].i, &S->e[i].j, &S->e[i].x);
         printf("\n");
     }
 }
@@ -54,7 +54,7 @@ void Display(struct Sparse *S)
 }
 
 // order of matrices should be same to add.
-void AddSparse(struct Sparse *A, struct Sparse *B, struct Sparse *C)
+struct Sparse *AddSparse(struct Sparse *A, struct Sparse *B)
 {
     int i = 0;
     int j = 0;
@@ -63,9 +63,10 @@ void AddSparse(struct Sparse *A, struct Sparse *B, struct Sparse *C)
     if (A->m != B->m || A->n != B->n)
     {
         printf("Order of A and B should be same\n");
-        return;
+        return 0;
     }
 
+    struct Sparse *C = (struct Sparse *)malloc(sizeof(struct Sparse));
     C->m = A->m;
     C->n = A->n;
     C->e = (struct Element *)malloc((A->numOfElements + B->numOfElements) * sizeof(struct Element));
@@ -86,23 +87,39 @@ void AddSparse(struct Sparse *A, struct Sparse *B, struct Sparse *C)
         else if (A->e[i].i < B->e[j].i)
             C->e[k++] = A->e[i++];
     }
+
+    // COPY REMAINING ELEMENTS
+    for (; i < A->numOfElements; i++)
+    {
+        C->e[k++] = A->e[i];
+    }
+
+    for (; j < B->numOfElements; j++)
+    {
+        C->e[k++] = B->e[j];
+    }
+
     C->numOfElements = k;
+
+    return C;
 }
 
 int main()
 {
     struct Sparse A;
     struct Sparse B;
-    struct Sparse C;
 
     Create(&A);
+    printf("Matrix A\n");
     Display(&A);
 
     Create(&B);
+    printf("Matrix B\n");
     Display(&B);
-    AddSparse(&A, &B, &C);
 
-    Display(&C);
+    struct Sparse *S3 = AddSparse(&A, &B);
+    printf("Matrix C\n");
+    Display(S3);
 
     return 0;
 }
