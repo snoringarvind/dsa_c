@@ -104,22 +104,88 @@ struct Sparse *AddSparse(struct Sparse *A, struct Sparse *B)
     return C;
 }
 
+struct Term
+{
+    int coeff;
+    int exp;
+};
+
+struct Poly
+{
+    int n;
+    struct Term *t;
+};
+
+struct Poly *CreatePoly(struct Poly *poly)
+{
+    printf("Enter no. of non-zero terms\n");
+    scanf("%d", &poly->n);
+
+    poly->t = (struct Term *)malloc(poly->n * sizeof(struct Term));
+
+    printf("Enter coefficients and powers\n");
+
+    for (int i = 0; i < poly->n; i++)
+    {
+        scanf("%d %d", &poly->t[i].coeff, &poly->t[i].exp);
+    }
+};
+
+void DisplayPoly(struct Poly *poly)
+{
+    for (int i = 0; i < poly->n; i++)
+    {
+        if (i == poly->n - 1)
+            printf("%dx%d", poly->t[i].coeff, poly->t[i].exp);
+        else
+            printf("%dx%d+", poly->t[i].coeff, poly->t[i].exp);
+    }
+    printf("\n");
+};
+
+struct Poly *AddPoly(struct Poly *p1, struct Poly *p2)
+{
+    struct Poly *p3 = (struct Poly *)malloc(sizeof(struct Poly));
+    p3->t = (struct Term *)malloc((p1->n + p2->n) * sizeof(struct Term));
+
+    int i = 0;
+    int j = 0;
+    int k = 0;
+
+    while (i < p1->n && j < p2->n)
+    {
+        if (p1->t[i].exp > p2->t[j].exp)
+            p3->t[k++] = p1->t[i++];
+        else if (p1->t[i].exp < p2->t[j].exp)
+            p3->t[k++] = p2->t[j++];
+        else
+        {
+            p3->t[k] = p1->t[i++];
+            p3->t[k++].coeff += p2->t[j++].coeff;
+        }
+    };
+
+    for (; i < p1->n; i++)
+        p3->t[k++] = p1->t[i];
+
+    for (; j < p2->n; j++)
+        p3->t[k++] = p2->t[j];
+
+    p3->n = k;
+    return p3;
+}
+
 int main()
 {
-    struct Sparse A;
-    struct Sparse B;
+    struct Poly p1;
+    CreatePoly(&p1);
+    DisplayPoly(&p1);
 
-    Create(&A);
-    printf("Matrix A\n");
-    Display(&A);
+    struct Poly p2;
+    CreatePoly(&p2);
+    DisplayPoly(&p2);
 
-    Create(&B);
-    printf("Matrix B\n");
-    Display(&B);
-
-    struct Sparse *S3 = AddSparse(&A, &B);
-    printf("Matrix C\n");
-    Display(S3);
-
+    struct Poly *p3 = AddPoly(&p1, &p2);
+    DisplayPoly(p3);
     return 0;
 }
