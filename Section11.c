@@ -46,7 +46,7 @@ void RDisplayLinkedList(struct Node *p)
 }
 
 // using loops
-void CountingNodes(struct Node *p)
+int CountingNodes(struct Node *p)
 {
     int c = 0;
     while (p != NULL)
@@ -55,7 +55,7 @@ void CountingNodes(struct Node *p)
         p = p->Next;
     }
 
-    printf("nodes = %d\n", c);
+    return c;
 }
 
 // using recursion
@@ -139,7 +139,7 @@ struct Node *SearchUsingR(struct Node *p, int element)
 
 struct Node *SearchMoveToHead(struct Node *p, int element)
 {
-    struct Node *q=NULL;
+    struct Node *q = NULL;
     while (p != NULL)
     {
         if (p->Data == element)
@@ -155,12 +155,36 @@ struct Node *SearchMoveToHead(struct Node *p, int element)
     return NULL;
 }
 
+void Insert(struct Node *p, int index, int x)
+{
+    struct Node *t;
+    int i;
+
+    if (index < 0 || index > CountingNodes(p))
+        return;
+    t = (struct Node *)malloc(sizeof(struct Node));
+    t->Data = x;
+
+    if (index == 0)
+    {
+        t->Next = first;
+        first = t;
+    }
+    else
+    {
+        for (i = 0; i < index - 1; i++)
+            p = p->Next;
+        t->Next = p->Next;
+        p->Next = t;
+    }
+}
+
 int main()
 {
     int A[5] = {8, 3, 7, 12, 9};
     CreateLinkedList(A);
 
-    struct Node *p = SearchMoveToHead(first, 12);
-    printf("%d %d\n", p->Data, p->Next);
+    Insert2(first, 3, 69);
+    DisplayLinkedList(first);
     return 0;
 }
