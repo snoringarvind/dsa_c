@@ -5,17 +5,20 @@ struct Node
 {
     int Data;
     struct Node *Next;
-} *first = NULL;
+};
 
-void CreateLinkedList(int A[])
+struct Node *first = NULL;
+struct Node *second = NULL;
+
+struct Node *CreateLinkedList(int A[], int n)
 {
-    struct Node *last, *p;
+    struct Node *last, *p, *first;
     first = (struct Node *)malloc(sizeof(struct Node));
     first->Data = A[0];
     first->Next = NULL;
     last = first;
 
-    for (int i = 1; i < 5; i++)
+    for (int i = 1; i < n; i++)
     {
         p = (struct Node *)malloc(sizeof(struct Node));
         p->Data = A[i];
@@ -24,6 +27,8 @@ void CreateLinkedList(int A[])
         last->Next = p;
         last = p;
     }
+
+    return first;
 }
 
 void DisplayLinkedList(struct Node *p)
@@ -33,6 +38,7 @@ void DisplayLinkedList(struct Node *p)
         printf("%d ", p->Data);
         p = p->Next;
     }
+    printf("\n");
 }
 
 void RDisplayLinkedList(struct Node *p)
@@ -97,7 +103,7 @@ int Max(struct Node *p)
             max = p->Data;
         p = p->Next;
     }
-    printf("%d", max);
+    return max;
 }
 // using recursion
 int MaxUsingR(struct Node *p)
@@ -179,12 +185,240 @@ void Insert(struct Node *p, int index, int x)
     }
 }
 
+void InsertInSortedList(struct Node *p, int element)
+{
+    struct Node *q = NULL;
+    struct Node *t = (struct Node *)malloc(sizeof(struct Node *));
+    t->Data = element;
+    t->Next = NULL;
+
+    if (p == NULL)
+        first = t;
+    else
+    {
+        while (p != NULL && p->Data < element)
+        {
+            q = p;
+            p = p->Next;
+        }
+        if (first == p)
+        {
+            t->Next = first;
+            first = t;
+        }
+        else
+        {
+            t->Next = q->Next;
+            q->Next = t;
+        }
+    }
+}
+
+int Delete(struct Node *p, int index)
+{
+    struct Node *q = NULL;
+    int x = -1;
+
+    if (index < 0 || index > CountingNodes(p))
+    {
+        return x;
+    }
+
+    if (index == 0)
+    {
+        first = p->Next;
+        x = p->Data;
+        free(p);
+    }
+    else
+    {
+        int i = 0;
+        for (i = 0; i < index - 1; i++)
+        {
+            q = p;
+            p = p->Next;
+        }
+
+        x = p->Data;
+        q->Next = p->Next;
+
+        free(p);
+    }
+    return x;
+}
+
+int isSorted(struct Node *p)
+{
+    int min = INT_MIN;
+
+    while (p != NULL)
+    {
+        if (p->Data < min)
+        {
+            return 0;
+        }
+        min = p->Data;
+        p = p->Next;
+    }
+    return 1;
+}
+
+void RemoveDuplicatedFromSortedLinkedList(struct Node *p)
+{
+    struct Node *q = p->Next;
+    while (q != NULL)
+    {
+        if (p->Data == q->Data)
+        {
+            p->Next = q->Next;
+            free(q);
+            q = p->Next;
+        }
+        else
+        {
+            p = q;
+            q = q->Next;
+        }
+    }
+}
+
+// using array
+void ReverseLinkedList_1(struct Node *p)
+{
+    int *A = (int *)malloc(CountingNodes(p) * sizeof(int));
+    int i = 0;
+
+    while (p != NULL)
+    {
+        A[i] = p->Data;
+        i++;
+        p = p->Next;
+    }
+
+    i--;
+
+    p = first;
+
+    for (; i >= 0; i--)
+    {
+        p->Data = A[i];
+        p = p->Next;
+    }
+}
+
+// using pointers
+void ReverseLinkedList_2(struct Node *p)
+{
+    struct Node *q = NULL;
+    struct Node *r = NULL;
+
+    while (p != NULL)
+    {
+        r = q;
+        q = p;
+        p = p->Next;
+
+        q->Next = r;
+    }
+    first = q;
+}
+
+// using recursion
+struct Node *ReverseLinkedList_3(struct Node *q, struct Node *p)
+{
+    if (p != NULL)
+    {
+        ReverseLinkedList_3(p, p->Next);
+        p->Next = q;
+    }
+    else
+    {
+        first = q;
+    }
+}
+
+void Concatenate(struct Node *A, struct Node *B)
+{
+    while (A->Next != NULL)
+    {
+        A = A->Next;
+    }
+
+    A->Next = B;
+}
+
+struct Node *Merge(struct Node *first, struct Node *second)
+{
+    struct Node *third, *last;
+
+    if (first->Data < second->Data)
+    {
+        third = last = first;
+        first = first->Next;
+        last->Next = NULL;
+    }
+    else
+    {
+        third = last = second;
+        second = second->Next;
+        last->Next = NULL;
+    }
+
+    while (first != NULL && second != NULL)
+    {
+        if (first->Data > second->Data)
+        {
+            last->Next = second;
+            last = second;
+            second = second->Next;
+            last->Next = NULL;
+        }
+        else
+        {
+            last->Next = first;
+            last = first;
+            first = first->Next;
+            last->Next = NULL;
+        }
+    }
+
+    if (first != NULL)
+        last->Next = first;
+    else
+        last->Next = second;
+    return third;
+}
+
+int CheckLoop(struct Node *p)
+{
+    struct Node *q = p;
+
+    do
+    {
+        p = p->Next;
+        q = q->Next;
+        q = q != NULL ? q->Next : NULL;
+    } while (p && q && p != q);
+
+    if (p == q)
+        return 1;
+    else
+        return 0;
+}
+
 int main()
 {
-    int A[5] = {8, 3, 7, 12, 9};
-    CreateLinkedList(A);
+    int A[] = {2, 8, 15, 14};
+    int B[] = {4, 7, 12, 14};
 
-    Insert2(first, 3, 69);
+    first = CreateLinkedList(A, 4);
+    second = CreateLinkedList(B, 4);
+
+    // struct Node *third = Merge(first, second);
+    // ReverseLinkedList_1(first);
+    // RemoveDuplicatedFromSortedLinkedList(first);
+    int check = isSorted(first);
+    printf("%d ", check);
     DisplayLinkedList(first);
     return 0;
 }
