@@ -406,19 +406,42 @@ int CheckLoop(struct Node *p)
         return 0;
 }
 
+void FindMiddleElement_1(struct Node *p)
+{
+    int c = 0;
+    struct Node *q = p;
+    while (p != NULL)
+    {
+        c++;
+        if (c % 2 == 0)
+        {
+            q = q->Next;
+        }
+        p = p->Next;
+    }
+
+    printf("%d\n", q->Data);
+}
+
+void FindMiddleElement_2(struct Node *p)
+{
+    struct Node *q = p;
+    while (q->Next != NULL)
+    {
+        p = p->Next;
+        q = q->Next;
+        if (q)
+            q = q->Next;
+    }
+
+    printf("%d\n", p->Data);
+}
+
 int main()
 {
-    int A[] = {2, 8, 15, 14};
-    int B[] = {4, 7, 12, 14};
+    int A[] = {2, 8, 15, 14, 17, 19, 20, 23, 24};
+    first = CreateLinkedList(A, 9);
 
-    first = CreateLinkedList(A, 4);
-    second = CreateLinkedList(B, 4);
-
-    // struct Node *third = Merge(first, second);
-    // ReverseLinkedList_1(first);
-    // RemoveDuplicatedFromSortedLinkedList(first);
-    int check = isSorted(first);
-    printf("%d ", check);
-    DisplayLinkedList(first);
+    FindMiddleElement_2(first);
     return 0;
 }
