@@ -147,6 +147,7 @@ int Delete(struct Node *p, int index)
     return x;
 }
 
+
 int main()
 {
     int A[] = {2, 7, 8, 9, 10};
