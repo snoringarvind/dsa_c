@@ -187,7 +187,7 @@ void Reverse_2(struct Node *p)
     first = q;
 }
 
-//using recursion;
+// using recursion;
 void Reverse_3(struct Node *q, struct Node *p)
 {
     if (p != NULL)
@@ -208,7 +208,7 @@ int main()
 
     first = Create(A, 5);
 
-    Reverse_3(NULL, first);
+    Reverse_4(first);
     // printf("%d\n", x);
     Display(first);
 
