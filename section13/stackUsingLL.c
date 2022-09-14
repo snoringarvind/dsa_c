@@ -26,18 +26,34 @@ void Push(int x)
     }
 }
 
-void Pop()
+void Display()
+{
+    struct Node *p = Top;
+
+    while (p != NULL)
+    {
+        printf("%d ", p->data);
+        p = p->next;
+    }
+    printf("\n");
+}
+
+int Pop()
 {
     struct Node *q = Top;
+    int x = -1;
 
     if (Top == NULL)
         printf("stack underflow\n");
     else
     {
+        x = Top->data;
         Top = q->next;
         free(q);
         q = NULL;
     }
+
+    return x;
 }
 
 int isEmpty()
@@ -88,8 +104,10 @@ int main()
     Push(2);
     Push(3);
     Push(4);
-    printf("%d", stackTop());
+    Push(5);
+    Push(6);
+    Display();
     Pop();
-    printf("%d", stackTop());
+    Display();
     return 0;
 }

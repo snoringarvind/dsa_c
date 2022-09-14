@@ -153,7 +153,7 @@ int IsBalance(char *exp)
 
 int main()
 {
-    char exp[] = "[{(a+b)+(c+d))}/2]";
+    char exp[] = "[{(a+b)+(c+d)}/2]";
 
     int check = IsBalance(exp);
 

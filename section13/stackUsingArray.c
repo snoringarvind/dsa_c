@@ -16,6 +16,15 @@ void CreateStack(struct Stack *stack)
     stack->S = (int *)malloc(stack->size * sizeof(int));
 }
 
+void Display(struct Stack *stack)
+{
+    for (int i = stack->top; i >= 0; i--)
+    {
+        printf("%d ", stack->S[i]);
+    }
+    printf("\n");
+}
+
 void Push(struct Stack *stack, int x)
 {
     if (stack->top == stack->size - 1)
@@ -26,7 +35,7 @@ void Push(struct Stack *stack, int x)
 
 int Pop(struct Stack *stack)
 {
-    int x = -1;
+    int x = -1; 
 
     if (stack->top == -1)
         printf("stack underflow\n");
@@ -61,7 +70,7 @@ int Peek(struct Stack *stack, int pos)
 
 int IsEmpty(struct Stack *stack)
 {
-    if (stack->top == stack->size - 1)
+    if (stack->top == -1)
         return 0;
     else
         return 1;
@@ -79,5 +88,14 @@ int main()
 {
     struct Stack S;
 
-        return 0;
+    CreateStack(&S);
+    Push(&S, 1);
+    Push(&S, 2);
+    Push(&S, 3);
+    Push(&S, 4);
+    Push(&S, 5);
+    Push(&S, 6);
+    Display(&S);
+
+    return 0;
 }
